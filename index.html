@@ -969,13 +969,19 @@
         /* Hidden by default - revealed by IntersectionObserver */
         .scroll-reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(25px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
         }
 
         .scroll-reveal.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Fallback: if JS doesn't load, show everything */
+        .no-js .scroll-reveal {
+            opacity: 1;
+            transform: none;
         }
 
         .animate {
@@ -1648,13 +1654,25 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     } else {
-                        // Remove visible when scrolled out → re-animate on scroll back
                         entry.target.classList.remove('visible');
                     }
                 });
-            }, { rootMargin: '0px 0px -50px 0px', threshold: 0.05 });
+            }, {
+                rootMargin: '200px 0px 200px 0px',  // Trigger 200px BEFORE entering viewport
+                threshold: 0.01
+            });
 
             document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+
+            // Fallback: after 1.5s show everything that's still hidden (mobile safety net)
+            setTimeout(() => {
+                document.querySelectorAll('.scroll-reveal:not(.visible)').forEach(el => {
+                    el.classList.add('visible');
+                });
+            }, 1500);
+        } else {
+            // No IntersectionObserver support → show everything
+            document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('visible'));
         }
 
         // ============ Active Section Highlight on Scroll ============
