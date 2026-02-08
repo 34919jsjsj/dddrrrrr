@@ -752,7 +752,7 @@
             background: rgba(212, 175, 55, 0.1);
         }
 
-        /* ============ Floating Buttons (Static - No Animation) ============ */
+        /* ============ Floating Buttons (Animated) ============ */
         .fab-container {
             position: fixed;
             bottom: 90px;
@@ -760,52 +760,62 @@
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 16px;
         }
 
         .fab {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-            will-change: transform;
-            backdrop-filter: blur(12px);
+            font-size: 22px;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
         }
 
         .fab:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+            transform: scale(1.15);
         }
 
         .fab:active {
-            transform: scale(0.92);
-            transition-duration: 0.08s;
+            transform: scale(0.9);
         }
 
         .fab-gold {
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             color: var(--dark);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            animation-delay: 0.5s;
+        }
+
+        .fab-gold:hover {
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
         }
 
         .fab-blue {
-            background: rgba(59, 130, 246, 0.9);
-            backdrop-filter: blur(16px);
+            background: linear-gradient(135deg, var(--blue), #1d4ed8);
             color: #fff;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.35);
         }
 
-        /* FAB visibility on scroll */
-        .fab-hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.5);
+        .fab-blue:hover {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         /* ============ Card Share Actions (Unified) ============ */
@@ -943,11 +953,11 @@
             font-size: 14px;
         }
 
-        /* ============ Animations ============ */
+        /* ============ Animations (Scroll Reveal) ============ */
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
 
             to {
@@ -956,19 +966,34 @@
             }
         }
 
+        /* Hidden by default - revealed by IntersectionObserver */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .animate {
-            animation: fadeUp 0.4s ease-out both;
+            animation: fadeUp 0.5s ease-out both;
         }
 
         .delay-1 {
+            transition-delay: 0.1s;
             animation-delay: 0.1s;
         }
 
         .delay-2 {
+            transition-delay: 0.2s;
             animation-delay: 0.2s;
         }
 
         .delay-3 {
+            transition-delay: 0.3s;
             animation-delay: 0.3s;
         }
 
@@ -998,13 +1023,10 @@
             }
         }
 
-        /* Content sections visibility */
+        /* Content sections - always visible, scroll to them */
         .content-section {
-            display: none;
-        }
-
-        .content-section.active {
             display: block;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -1580,48 +1602,27 @@
         document.addEventListener('touchmove', () => { }, { passive: true });
         document.addEventListener('wheel', () => { }, { passive: true });
 
-        // ============ FAB Scroll Visibility ============
-        const scrollFab = document.querySelector('.fab-gold');
-        let lastScroll = 0;
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const y = window.scrollY;
-                    if (scrollFab) {
-                        if (y > 300) {
-                            scrollFab.classList.remove('fab-hidden');
-                        } else {
-                            scrollFab.classList.add('fab-hidden');
-                        }
-                    }
-                    lastScroll = y;
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }, { passive: true });
-        // Hide initially
-        if (scrollFab) scrollFab.classList.add('fab-hidden');
-
-        // ============ Navigation Filtering ============
+        // ============ Navigation → Scroll to Section ============
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
                 const section = this.dataset.section;
-                const allSections = document.querySelectorAll('.content-section');
 
                 if (section === 'all') {
-                    allSections.forEach(s => s.classList.add('active'));
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    allSections.forEach(s => s.classList.remove('active'));
                     const target = document.getElementById('section-' + section);
-                    if (target) target.classList.add('active');
+                    if (target) {
+                        // Scroll to the section with offset for fixed header + nav
+                        const offset = 140;
+                        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                        window.scrollTo({ top: top, behavior: 'smooth' });
+                    }
                 }
 
-                document.querySelector('.main').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 if (navigator.vibrate) navigator.vibrate(5);
             });
         });
@@ -1634,6 +1635,52 @@
                 if (navigator.vibrate) navigator.vibrate(3);
             });
         });
+
+        // ============ Scroll Reveal (Show/Hide on scroll) ============
+        if ('IntersectionObserver' in window) {
+            // Add scroll-reveal class to all cards and section titles
+            document.querySelectorAll('.card, .section-title, .footer').forEach(el => {
+                el.classList.add('scroll-reveal');
+            });
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        // Remove visible when scrolled out → re-animate on scroll back
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, { rootMargin: '0px 0px -50px 0px', threshold: 0.05 });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+        }
+
+        // ============ Active Section Highlight on Scroll ============
+        const sections = document.querySelectorAll('.content-section');
+        const navBtns = document.querySelectorAll('.nav-btn');
+
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(() => {
+                let current = '';
+                sections.forEach(section => {
+                    const top = section.getBoundingClientRect().top;
+                    if (top < 200) {
+                        current = section.id.replace('section-', '');
+                    }
+                });
+
+                if (current) {
+                    navBtns.forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.section === current) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { passive: true });
 
         // ============ Share / Copy / Save Handlers ============
         function getCardText(card) {
@@ -1716,20 +1763,6 @@
             document.body.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 1800);
             setTimeout(() => toast.remove(), 2200);
-        }
-
-        // ============ Intersection Observer ============
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { rootMargin: '50px', threshold: 0.1 });
-
-            document.querySelectorAll('.card, .section-title').forEach(el => observer.observe(el));
         }
     </script>
 </body>
