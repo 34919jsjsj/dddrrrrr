@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>زيزو بلال - منصة العلم الشرعي v3</title>
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ============ Reset & Variables ============ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f4d03f;
+            --gold-dark: #b8941f;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --card: #12121a;
+            --card-hover: #1a1a28;
+            --blue: #3b82f6;
+            --green: #10b981;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --amber: #d97706;
+            --red: #ef4444;
+            --gray: #9ca3af;
+            --text: #e5e7eb;
+            --text-light: #d1d5db;
+            --border: rgba(212, 175, 55, 0.1);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--card) 50%, var(--dark) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* GPU Acceleration */
+        .gpu {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* ============ Arabesque Pattern ============ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23d4af37' stroke-opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============ Gold Text ============ */
+        .gold-text {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* ============ Header (Fixed) ============ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            height: 64px;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .logo small {
+            font-size: 11px;
+            color: var(--gray);
+            display: block;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat .num {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .header-stat .label {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .user-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all var(--transition);
+        }
+
+        .user-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* ============ Navigation (Fixed) ============ */
+        .nav {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: linear-gradient(180deg, rgba(10, 10, 15, 0.98), rgba(10, 10, 15, 0.92));
+            padding: 10px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.05);
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-inner {
+            display: flex;
+            gap: 8px;
+            max-width: 900px;
+            margin: 0 auto;
+            min-width: max-content;
+        }
+
+        .nav-btn {
+            flex-shrink: 0;
+            background: rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            color: var(--gray);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.08));
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ============ Main Content ============ */
+        .main {
+            margin-top: 130px;
+            padding: 20px 16px 120px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ Section Titles ============ */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .section-title h2 {
+            font-size: 22px;
+            color: #f9fafb;
+            font-weight: 800;
+        }
+
+        .section-title .count {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ============ Cards Grid ============ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 35px;
+        }
+
+        /* ============ Glass Card ============ */
+        .card {
+            background: linear-gradient(145deg, rgba(18, 18, 26, 0.9), rgba(10, 10, 15, 0.95));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+        }
+
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Sidebar Colors per Type */
+        .card-quran::before {
+            background: linear-gradient(180deg, var(--amber), var(--gold));
+        }
+
+        .card-hadith::before {
+            background: linear-gradient(180deg, var(--blue), #1d4ed8);
+        }
+
+        .card-benefits::before {
+            background: linear-gradient(180deg, var(--green), #059669);
+        }
+
+        .card-characters::before {
+            background: linear-gradient(180deg, var(--purple), #6d28d9);
+        }
+
+        .card-stories::before {
+            background: linear-gradient(180deg, var(--pink), #be185d);
+        }
+
+        .card-fiqh::before {
+            background: linear-gradient(180deg, var(--amber), #b45309);
+        }
+
+        .card-scholars::before {
+            background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+        }
+
+        .card-levels::before {
+            background: linear-gradient(180deg, var(--blue), var(--purple));
+        }
+
+        .card-dialogue::before {
+            background: linear-gradient(180deg, var(--green), var(--blue));
+        }
+
+        .card-action::before {
+            background: linear-gradient(180deg, var(--green), var(--amber));
+        }
+
+        /* ============ Card Header ============ */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .card-quran .card-icon {
+            background: rgba(217, 119, 6, 0.15);
+        }
+
+        .card-hadith .card-icon {
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .card-benefits .card-icon {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .card-characters .card-icon {
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .card-scholars .card-icon {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .card-levels .card-icon {
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .card-dialogue .card-icon {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .card-action .card-icon {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .card-header h3 {
+            color: #f9fafb;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .card-header small {
+            color: var(--gray);
+            font-size: 13px;
+            display: block;
+        }
+
+        /* ============ Card Body ============ */
+        .card-body p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .verse {
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px solid rgba(217, 119, 6, 0.15);
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: #fbbf24;
+            font-size: 17px;
+            line-height: 2;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .hadith-text {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: #93c5fd;
+            font-size: 16px;
+            line-height: 1.9;
+            margin-bottom: 12px;
+        }
+
+        .card-body ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-body li {
+            padding: 10px 14px;
+            margin: 6px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition);
+        }
+
+        .card-body li:hover {
+            background: rgba(212, 175, 55, 0.08);
+            transform: translateX(-4px);
+        }
+
+        .card-body li::before {
+            content: '◆';
+            color: var(--gold);
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        /* ============ Tags ============ */
+        .card-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all var(--transition);
+        }
+
+        .tag:hover {
+            transform: scale(1.05);
+        }
+
+        .tag-gold {
+            background: rgba(212, 175, 55, 0.12);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .tag-blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tag-green {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .tag-purple {
+            background: rgba(139, 92, 246, 0.12);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .tag-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* ============ Quote Cards (أقوال العلماء) ============ */
+        .scholar-quote {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.06), rgba(18, 18, 26, 0.8));
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin: 10px 0;
+            transition: all var(--transition);
+            border-right: 3px solid var(--gold);
+        }
+
+        .scholar-quote:hover {
+            border-right-color: var(--gold-light);
+            transform: translateX(-6px);
+            box-shadow: -8px 0 25px rgba(212, 175, 55, 0.08);
+        }
+
+        .scholar-name {
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .scholar-text {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 6px;
+        }
+
+        .scholar-context {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        /* ============ Levels (سلم التدرج) ============ */
+        .level-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin: 10px 0;
+            border-right: 3px solid var(--gold);
+            transition: all var(--transition);
+        }
+
+        .level-item:hover {
+            transform: translateX(-4px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .medal {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* ============ Dialogue (حوارات) ============ */
+        .dialogue-bubble {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text);
+            position: relative;
+        }
+
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 16px;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            transform: rotate(45deg);
+            border-radius: 0 0 4px 0;
+        }
+
+        .speaker-tag {
+            margin-top: 16px;
+        }
+
+        /* ============ Do/Don't Section ============ */
+        .action-section {
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 12px 0;
+        }
+
+        .action-do {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.03));
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .action-dont {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(239, 68, 68, 0.03));
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .action-title {
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 14px;
+            margin: 8px 0;
+            transition: all var(--transition);
+        }
+
+        .action-item:hover {
+            background: rgba(0, 0, 0, 0.25);
+            transform: translateX(-4px);
+        }
+
+        .action-item i {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .action-item p {
+            font-weight: 700;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .action-item small {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        /* ============ Action Buttons ============ */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--dark);
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* ============ Floating Buttons ============ */
+        .fab-container {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: all var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--dark);
+        }
+
+        .fab-blue {
+            background: linear-gradient(135deg, var(--blue), #1d4ed8);
+            color: #fff;
+        }
+
+        /* ============ Bottom Navigation ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+        }
+
+        .bottom-nav-inner {
+            display: flex;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            color: #555;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        /* ============ Footer ============ */
+        .footer {
+            background: linear-gradient(145deg, rgba(18, 18, 26, 0.9), rgba(10, 10, 15, 0.95));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer h3 {
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .footer p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* ============ Animations ============ */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeUp 0.4s ease-out both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-stats {
+                display: none;
+            }
+
+            .main {
+                margin-top: 120px;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Content sections visibility */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ HEADER ============ -->
+    <header class="header gpu">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-mosque"></i></div>
+                <div>
+                    <h1 class="gold-text">زيزو بلال</h1>
+                    <small>منصة العلم الشرعي</small>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="num">12</div>
+                    <div class="label">درس</div>
+                </div>
+                <div class="header-stat">
+                    <div class="num">6</div>
+                    <div class="label">قسم</div>
+                </div>
+                <div class="header-stat">
+                    <div class="num">3</div>
+                    <div class="label">شيخ</div>
+                </div>
+            </div>
+            <button class="user-btn"><i class="fas fa-user"></i></button>
+        </div>
+    </header>
+
+    <!-- ============ NAVIGATION ============ -->
+    <nav class="nav gpu">
+        <div class="nav-inner">
+            <button class="nav-btn active" data-section="all">📚 الكل</button>
+            <button class="nav-btn" data-section="quran">📖 القرآن</button>
+            <button class="nav-btn" data-section="hadith">🕌 الأحاديث</button>
+            <button class="nav-btn" data-section="scholars">📜 أقوال العلماء</button>
+            <button class="nav-btn" data-section="benefits">💡 الفوائد</button>
+            <button class="nav-btn" data-section="characters">👥 الشخصيات</button>
+            <button class="nav-btn" data-section="levels">🪜 سلم التدرج</button>
+            <button class="nav-btn" data-section="dialogue">💬 حوارات</button>
+            <button class="nav-btn" data-section="actions">✅ افعل / لا تفعل</button>
+        </div>
+    </nav>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main">
+
+        <!-- ========== القرآن ========== -->
+        <div class="content-section active" id="section-quran">
+            <div class="section-title animate">
+                <h2>📖 الآيات القرآنية</h2>
+                <span class="count">3 آيات</span>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card card-quran animate delay-1">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <div>
+                            <h3>آية التوحيد</h3>
+                            <small>سورة الذاريات - آية 56</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="verse">﴿ وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ ﴾</div>
+                        <p>الغاية من خلق الإنسان هي عبادة الله وحده</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-gold">عبادة</span>
+                        <span class="tag tag-gold">توحيد</span>
+                    </div>
+                </div>
+
+                <div class="card card-quran animate delay-2">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <div>
+                            <h3>آية الرحمة</h3>
+                            <small>سورة الأنبياء - آية 107</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="verse">﴿ وَمَا أَرْسَلْنَاكَ إِلَّا رَحْمَةً لِّلْعَالَمِينَ ﴾</div>
+                        <p>النبي ﷺ أُرسل رحمة لجميع الخلق</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-gold">رحمة</span>
+                        <span class="tag tag-gold">نبوة</span>
+                    </div>
+                </div>
+
+                <div class="card card-quran animate delay-3">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <div>
+                            <h3>آية الصبر</h3>
+                            <small>سورة البقرة - آية 153</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="verse">﴿ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ ﴾</div>
+                        <p>الصبر مفتاح الفرج ومعية الله مع الصابرين</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-gold">صبر</span>
+                        <span class="tag tag-gold">معية</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== الأحاديث ========== -->
+        <div class="content-section active" id="section-hadith">
+            <div class="section-title animate">
+                <h2>🕌 الأحاديث النبوية</h2>
+                <span class="count">2 حديث</span>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card card-hadith animate delay-1">
+                    <div class="card-header">
+                        <div class="card-icon">🕌</div>
+                        <div>
+                            <h3>حديث النية</h3>
+                            <small>متفق عليه</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="hadith-text">"إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى"</div>
+                        <ul>
+                            <li>النية أساس قبول العمل</li>
+                            <li>الإخلاص لله في كل شيء</li>
+                            <li>الأجر على قدر النية</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-blue">صحيح</span>
+                        <span class="tag tag-blue">نية</span>
+                    </div>
+                </div>
+
+                <div class="card card-hadith animate delay-2">
+                    <div class="card-header">
+                        <div class="card-icon">🕌</div>
+                        <div>
+                            <h3>حديث الرحمة</h3>
+                            <small>رواه الترمذي</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="hadith-text">"الراحمون يرحمهم الرحمن، ارحموا من في الأرض يرحمكم من في السماء"</div>
+                        <ul>
+                            <li>الرحمة صفة المؤمنين</li>
+                            <li>الجزاء من جنس العمل</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-blue">صحيح</span>
+                        <span class="tag tag-blue">رحمة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== أقوال العلماء ========== -->
+        <div class="content-section active" id="section-scholars">
+            <div class="section-title animate">
+                <h2>📜 أقوال العلماء</h2>
+                <span class="count">2 قول</span>
+            </div>
+
+            <div class="card card-scholars animate delay-1" style="margin-bottom: 16px;">
+                <div class="card-header">
+                    <div class="card-icon">📜</div>
+                    <div>
+                        <h3>حكم ومواعظ من سلف الأمة</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="scholar-quote">
+                        <div class="scholar-name">🏛️ العالم: الحافظ ابن حجر</div>
+                        <div class="scholar-text">الصيام سر بين العبد وربه</div>
+                        <div class="scholar-context">📌 السياق: شرح فضل الصيام</div>
+                    </div>
+                    <div class="scholar-quote">
+                        <div class="scholar-name">🏛️ العالم: ابن القيم</div>
+                        <div class="scholar-text">من قال أنا بالاستغناء كذّب</div>
+                        <div class="scholar-context">📌 السياق: بيان خطر الاعتماد على النفس</div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-gold"><i class="fas fa-share-alt"></i> مشاركة</button>
+                    <button class="btn btn-outline"><i class="fas fa-bookmark"></i> حفظ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== الفوائد ========== -->
+        <div class="content-section active" id="section-benefits">
+            <div class="section-title animate">
+                <h2>💡 الفوائد والحكم</h2>
+                <span class="count">3 فائدة</span>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card card-benefits animate delay-1">
+                    <div class="card-header">
+                        <div class="card-icon">💡</div>
+                        <div>
+                            <h3>أهمية التوحيد</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>التوحيد هو أساس الإسلام وأول ما يُدعى إليه، وهو الغاية من خلق الإنسان</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-green">عقيدة</span>
+                        <span class="tag tag-green">توحيد</span>
+                    </div>
+                </div>
+
+                <div class="card card-benefits animate delay-2">
+                    <div class="card-header">
+                        <div class="card-icon">🌟</div>
+                        <div>
+                            <h3>الإخلاص في العمل</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>العبادة ليست أفعالاً ظاهرة فقط، بل نية صادقة وقلب خاشع لله</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-green">أخلاق</span>
+                        <span class="tag tag-green">إخلاص</span>
+                    </div>
+                </div>
+
+                <div class="card card-benefits animate delay-3">
+                    <div class="card-header">
+                        <div class="card-icon">✨</div>
+                        <div>
+                            <h3>الرجوع إلى الله</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>في كل الأمور يجب الرجوع لله بالدعاء والتوكل والاستعانة</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-green">روحانيات</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== الشخصيات ========== -->
+        <div class="content-section active" id="section-characters">
+            <div class="section-title animate">
+                <h2>👥 الشخصيات الإسلامية</h2>
+                <span class="count">2 شخصية</span>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card card-characters animate delay-1">
+                    <div class="card-header">
+                        <div class="card-icon">👤</div>
+                        <div>
+                            <h3>مصعب بن عمير</h3>
+                            <small>رضي الله عنه</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>أول سفير في الإسلام - ترك الدنيا وزينتها من أجل نشر الدعوة</p>
+                        <ul>
+                            <li>من أوائل من أسلموا</li>
+                            <li>أرسله النبي لنشر الإسلام في المدينة</li>
+                            <li>استشهد في غزوة أحد</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-purple">صحابي</span>
+                        <span class="tag tag-purple">داعية</span>
+                    </div>
+                </div>
+
+                <div class="card card-characters animate delay-2">
+                    <div class="card-header">
+                        <div class="card-icon">👤</div>
+                        <div>
+                            <h3>خديجة بنت خويلد</h3>
+                            <small>رضي الله عنها</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>أول من آمن بالنبي ﷺ وصدقته ونصرته</p>
+                        <ul>
+                            <li>زوجة النبي الأولى</li>
+                            <li>أم المؤمنين</li>
+                            <li>سندت النبي في بداية الدعوة</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag tag-purple">صحابية</span>
+                        <span class="tag tag-purple">أم المؤمنين</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== سلم التدرج ========== -->
+        <div class="content-section active" id="section-levels">
+            <div class="section-title animate">
+                <h2>🪜 سلم التدرج</h2>
+                <span class="count">3 مستويات</span>
+            </div>
+
+            <div class="card card-levels animate delay-1">
+                <div class="card-header">
+                    <div class="card-icon">🪜</div>
+                    <div>
+                        <h3>اصعد بخطوات ثابتة نحو القمة</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="level-item">
+                        <div class="level-header">
+                            <span class="tag tag-gold">المستوى: 1</span>
+                            <span style="font-size: 24px;">🥇</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span class="tag tag-blue">الهدف: احفظ دعاء يا حي يا قيوم</span>
+                        </div>
+                        <div class="medal">🏅 الجائزة</div>
+                    </div>
+
+                    <div class="level-item">
+                        <div class="level-header">
+                            <span class="tag tag-gold">المستوى: 2</span>
+                            <span style="font-size: 24px;">🥈</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span class="tag tag-blue">الهدف: صم يوم واحد في الأسبوع</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span class="medal">🏅</span>
+                            <span class="medal">🏅</span>
+                        </div>
+                    </div>
+
+                    <div class="level-item">
+                        <div class="level-header">
+                            <span class="tag tag-gold">المستوى: 3</span>
+                            <span style="font-size: 24px;">🥉</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span class="tag tag-blue">الهدف: قم الليل 3 مرات في الأسبوع</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <span class="medal">🏅</span>
+                            <span class="medal">🏅</span>
+                            <span class="medal">🏅</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== حوارات متخيلة ========== -->
+        <div class="content-section active" id="section-dialogue">
+            <div class="section-title animate">
+                <h2>💬 حوارات متخيلة</h2>
+                <span class="count">حوار مع النفس</span>
+            </div>
+
+            <div class="card card-dialogue animate delay-1">
+                <div class="card-header">
+                    <div class="card-icon">💬</div>
+                    <div>
+                        <h3>حوار مع النفس</h3>
+                        <small>صراع القلب والنفس</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="dialogue-bubble">أنا قوي ومش محتاج حد</div>
+                    <div class="speaker-tag">
+                        <span class="tag tag-red">المتحدث: النفس</span>
+                    </div>
+
+                    <div class="dialogue-bubble" style="margin-top: 20px;">لا! من قال أنا بالاستغناء كذّب</div>
+                    <div class="speaker-tag">
+                        <span class="tag tag-green">المتحدث: القلب</span>
+                    </div>
+
+                    <div class="dialogue-bubble" style="margin-top: 20px;">طيب أعمل إيه؟</div>
+                    <div class="speaker-tag">
+                        <span class="tag tag-blue">المتحدث: العقل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== افعل / لا تفعل ========== -->
+        <div class="content-section active" id="section-actions">
+            <div class="section-title animate">
+                <h2>✅ لوحة المتابعة</h2>
+                <span class="count">افعل / لا تفعل</span>
+            </div>
+
+            <div class="card card-action animate delay-1">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <div>
+                        <h3>الدرس الأساسي</h3>
+                        <small>اعتصم بالله، داوم على العمل الصالح</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="background: rgba(0,0,0,0.2); border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+                        <p style="font-size: 17px; line-height: 1.9;">اعتصم بالله، داوم على العمل الصالح، والزم صحبة
+                            الصالحين عشان تثبت على الحق</p>
+                    </div>
+
+                    <!-- افعل -->
+                    <div class="action-section action-do">
+                        <div class="action-title" style="color: #4ade80;">
+                            <i class="fas fa-check-circle"></i> افعل:
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-check" style="color: #4ade80;"></i>
+                            <div>
+                                <p>صم أيام من شعبان</p>
+                                <small>تأسياً بالنبي ﷺ</small>
+                            </div>
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-check" style="color: #4ade80;"></i>
+                            <div>
+                                <p>ردد دعاء: يا حي يا قيوم</p>
+                                <small>برحمتك أستغيث</small>
+                            </div>
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-check" style="color: #4ade80;"></i>
+                            <div>
+                                <p>الزم مجالس العلم</p>
+                                <small>وصحبة الصالحين</small>
+                            </div>
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-check" style="color: #4ade80;"></i>
+                            <div>
+                                <p>علّم أهلك وأولادك</p>
+                                <small>السنة</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- لا تفعل -->
+                    <div class="action-section action-dont" style="margin-top: 12px;">
+                        <div class="action-title" style="color: #f87171;">
+                            <i class="fas fa-times-circle"></i> لا تفعل:
+                        </div>
+                        <div class="action-item">
+                            <i class="fas fa-times" style="color: #f87171;"></i>
+                            <div>
+                                <p>لا تعتمد على نفسك</p>
+                                <small>وقوتك الشخصية</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== Footer ========== -->
+        <div class="footer animate">
+            <h3>🕌 منصة زيزو وبلال الدعوية</h3>
+            <p>تصميم v3 - دمج كل المصادر</p>
+            <p style="color: #555; margin-top: 8px; font-size: 12px;">Glass Cards + GPU Performance + Multi-Section
+                Design</p>
+        </div>
+
+    </main>
+
+    <!-- ============ FLOATING BUTTONS ============ -->
+    <div class="fab-container gpu">
+        <button class="fab fab-blue" aria-label="بحث"><i class="fas fa-search"></i></button>
+        <button class="fab fab-gold" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="للأعلى"><i
+                class="fas fa-arrow-up"></i></button>
+    </div>
+
+    <!-- ============ BOTTOM NAVIGATION ============ -->
+    <nav class="bottom-nav gpu">
+        <div class="bottom-nav-inner">
+            <button class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </button>
+            <button class="nav-item">
+                <i class="fas fa-book-quran"></i>
+                <span>القرآن</span>
+            </button>
+            <button class="nav-item">
+                <i class="fas fa-hands-praying"></i>
+                <span>الأذكار</span>
+            </button>
+            <button class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>حسابي</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============ JAVASCRIPT ============ -->
+    <script>
+        // Passive events for performance
+        document.addEventListener('touchstart', () => { }, { passive: true });
+        document.addEventListener('touchmove', () => { }, { passive: true });
+        document.addEventListener('wheel', () => { }, { passive: true });
+
+        // Navigation Filtering
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                // Update active button
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const section = this.dataset.section;
+                const allSections = document.querySelectorAll('.content-section');
+
+                if (section === 'all') {
+                    // Show all sections
+                    allSections.forEach(s => s.classList.add('active'));
+                } else {
+                    // Show only selected section
+                    allSections.forEach(s => s.classList.remove('active'));
+                    const target = document.getElementById('section-' + section);
+                    if (target) target.classList.add('active');
+                }
+
+                // Scroll to top of content
+                document.querySelector('.main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Haptic feedback
+                if (navigator.vibrate) navigator.vibrate(5);
+            });
+        });
+
+        // Bottom Navigation
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                if (navigator.vibrate) navigator.vibrate(3);
+            });
+        });
+
+        // Intersection Observer for Animations
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, { rootMargin: '50px', threshold: 0.1 });
+
+            document.querySelectorAll('.card, .section-title').forEach(el => observer.observe(el));
+        }
+    </script>
+</body>
+
+</html>
